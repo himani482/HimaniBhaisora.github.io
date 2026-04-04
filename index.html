@@ -1,457 +1,482 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HIMANI.EXE — Agentic AI Builder</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/press-start-2p/index.css">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HIMANI.EXE — Agentic AI Builder</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/press-start-2p/index.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg:       #0d0d1a;
-      --bg2:      #13132a;
-      --bg3:      #1a1a35;
-      --border:   #2a2a5a;
-      --border2:  #3a3a7a;
-      --text:     #e8e8f0;
-      --text2:    #9090b8;
-      --text3:    #5555aa;
-      --accent:   #a020f0;
-      --accent2:  #c760ff;
-      --gold:     #ef9f27;
-      --green:    #3dba74;
-      --red:      #e24b4a;
-      --purple:   #9966ff;
-    }
+  :root {
+    --bg:       #0d0d1a;
+    --bg2:      #13132a;
+    --bg3:      #1a1a35;
+    --border:   #2a2a5a;
+    --border2:  #3a3a7a;
+    --text:     #e8e8f0;
+    --text2:    #9090b8;
+    --text3:    #5555aa;
+    --accent:   #a020f0;
+    --accent2:  #c760ff;
+    --gold:     #ef9f27;
+    --green:    #3dba74;
+    --red:      #e24b4a;
+    --purple:   #9966ff;
+  }
 
-    html, body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Press Start 2P', 'Courier New', monospace;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 24px 16px 40px;
-      width: 100%;
-      margin: 0;
-    }
+  #starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-    .container { width: 100%; max-width: 700px; }
+  /* dark overlay so card stays readable */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 15, 0.72);
+    z-index: 0;
+    pointer-events: none;
+  }
 
-    /* ── FRAME ── */
-    .frame {
-      border: 3px solid var(--border2);
-      background: var(--bg2);
-      position: relative;
-    }
-    .frame::before {
-      content: '';
-      position: absolute;
-      inset: -6px;
-      border: 1px solid var(--border);
-      pointer-events: none;
-    }
+  html, body {
+    background: #05050f url('blackwall.jpg') center center / cover no-repeat fixed;
+    color: var(--text);
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 16px 40px;
+    width: 100%;
+    margin: 0;
+  }
 
-    /* ── HEADER ── */
-    .hdr {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      border-bottom: 3px solid var(--border2);
-      background: var(--bg3);
-    }
-    .hdr-title { font-size: 11px; color: var(--accent2); letter-spacing: 1px; }
+  .container { width: 100%; max-width: 700px; position: relative; z-index: 1; }
 
-    /* ── STATS MINI ── */
-    .mini-bars { display: flex; flex-direction: column; gap: 4px; width: 110px; }
-    .mini-row  { display: flex; align-items: center; gap: 5px; }
-    .mini-lbl  { font-size: 5px; color: var(--text2); width: 14px; }
-    .mini-bg   { flex: 1; height: 7px; background: var(--bg); border: 1px solid var(--border); }
-    .mini-val  { font-size: 5px; color: var(--text2); width: 20px; text-align: right; }
-    .bar-fill  { height: 100%; transition: width 1.2s ease; }
+  /* ── FRAME ── */
+  .frame {
+    border: 3px solid var(--border2);
+    background: var(--bg2);
+    position: relative;
+  }
+  .frame::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
 
-    /* ── TABS ── */
-    .tabs { display: flex; border-bottom: 3px solid var(--border2); flex-wrap: wrap; }
-    .tb {
-      font-family: 'Press Start 2P', 'Courier New', monospace;
-      font-size: 7px;
-      padding: 9px 11px;
-      border: none;
-      background: var(--bg3);
-      color: var(--text3);
-      cursor: pointer;
-      border-right: 1px solid var(--border);
-      letter-spacing: 0.5px;
-      transition: background 0.1s, color 0.1s;
-    }
-    .tb:hover { background: var(--bg2); color: var(--text2); }
-    .tb.on { background: var(--bg2); color: var(--accent2); margin-bottom: -3px; border-bottom: 3px solid var(--bg2); }
+  /* ── HEADER ── */
+  .hdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 3px solid var(--border2);
+    background: var(--bg3);
+  }
+  .hdr-title { font-size: 11px; color: var(--accent2); letter-spacing: 1px; }
 
-    /* ── TAB CONTENT ── */
-    .tab { display: none; padding: 18px 16px; }
-    .tab.on { display: block; }
+  /* ── STATS MINI ── */
+  .mini-bars { display: flex; flex-direction: column; gap: 4px; width: 110px; }
+  .mini-row  { display: flex; align-items: center; gap: 5px; }
+  .mini-lbl  { font-size: 5px; color: var(--text2); width: 14px; }
+  .mini-bg   { flex: 1; height: 7px; background: var(--bg); border: 1px solid var(--border); }
+  .mini-val  { font-size: 5px; color: var(--text2); width: 20px; text-align: right; }
+  .bar-fill  { height: 100%; transition: width 1.2s ease; }
 
-    /* ── SECTION LABEL ── */
-    .sect {
-      font-size: 6.5px; color: var(--text3); margin-bottom: 14px;
-      letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 6px;
-    }
+  /* ── TABS ── */
+  .tabs { display: flex; border-bottom: 3px solid var(--border2); flex-wrap: wrap; }
+  .tb {
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 7px;
+    padding: 9px 11px;
+    border: none;
+    background: var(--bg3);
+    color: var(--text3);
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+    letter-spacing: 0.5px;
+    transition: background 0.1s, color 0.1s;
+  }
+  .tb:hover { background: var(--bg2); color: var(--text2); }
+  .tb.on { background: var(--bg2); color: var(--accent2); margin-bottom: -3px; border-bottom: 3px solid var(--bg2); }
 
-    /* ── CHARACTER PANEL ── */
-    .char-wrap { display: flex; gap: 16px; margin-bottom: 18px; }
-    .avatar {
-      width: 80px; height: 80px;
-      border: 3px solid var(--accent);
-      background: var(--bg3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 38px;
-      flex-shrink: 0;
-      image-rendering: pixelated;
-      position: relative;
-    }
-    .avatar::after {
-      content: '';
-      position: absolute;
-      inset: 3px;
-      border: 1px solid var(--border);
-      pointer-events: none;
-    }
-    .char-info { flex: 1; }
-    .char-name  { font-size: 12px; color: var(--accent2); margin-bottom: 5px; }
-    .char-class { font-size: 6px;  color: var(--text2); margin-bottom: 3px; }
-    .char-guild { font-size: 6px;  color: var(--text3); margin-bottom: 12px; }
+  /* ── TAB CONTENT ── */
+  .tab { display: none; padding: 18px 16px; }
+  .tab.on { display: block; }
 
-    /* ── BAR ── */
-    .bar-bg { background: var(--bg); border: 1.5px solid var(--border2); }
-    .xp-label { display: flex; justify-content: space-between; font-size: 6px; color: var(--text2); margin-bottom: 3px; }
+  /* ── SECTION LABEL ── */
+  .sect {
+    font-size: 6.5px; color: var(--text3); margin-bottom: 14px;
+    letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 6px;
+  }
 
-    /* ── ATTRIBUTE ROWS ── */
-    .srow { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-    .sicon { font-size: 14px; width: 22px; }
-    .slbl  { font-size: 6.5px; color: var(--text); width: 120px; flex-shrink: 0; }
-    .sval  { font-size: 6px; color: var(--text2); width: 30px; text-align: right; }
+  /* ── CHARACTER PANEL ── */
+  .char-wrap { display: flex; gap: 16px; margin-bottom: 18px; }
+  .avatar {
+    width: 80px; height: 80px;
+    border: 3px solid var(--accent);
+    background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 38px;
+    flex-shrink: 0;
+    image-rendering: pixelated;
+    position: relative;
+  }
+  .avatar::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border: 1px solid var(--border);
+    pointer-events: none;
+  }
+  .char-info { flex: 1; }
+  .char-name  { font-size: 12px; color: var(--accent2); margin-bottom: 5px; }
+  .char-class { font-size: 6px;  color: var(--text2); margin-bottom: 3px; }
+  .char-guild { font-size: 6px;  color: var(--text3); margin-bottom: 12px; }
 
-    /* ── QUEST CARDS ── */
-    .qcard {
-      border: 2px solid var(--border2);
-      background: var(--bg3);
-      padding: 12px;
-      margin-bottom: 10px;
-      transition: border-color 0.15s;
-    }
-    .qcard:hover { border-color: var(--accent2); }
-    .q-top   { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 7px; }
-    .q-title { font-size: 7.5px; color: var(--text); }
-    .q-desc  { font-size: 6px; color: var(--text2); margin-bottom: 6px; line-height: 1.8; }
-    .q-foot  { display: flex; justify-content: space-between; }
-    .q-diff  { font-size: 6px; color: var(--text3); }
-    .q-rew   { font-size: 6px; color: var(--accent2); }
-    .badge   { font-family: 'Press Start 2P','Courier New',monospace; font-size: 5.5px; padding: 3px 6px; }
-    .ok  { background: #0d2a1a; color: #3dba74; border: 1px solid #1a5a30; }
-    .wip { background: #2a0d2a; color: #c760ff; border: 1px solid #5a1a5a; }
+  /* ── BAR ── */
+  .bar-bg { background: var(--bg); border: 1.5px solid var(--border2); }
+  .xp-label { display: flex; justify-content: space-between; font-size: 6px; color: var(--text2); margin-bottom: 3px; }
 
-    /* ── SKILLS ── */
-    .skill-cat { margin-bottom: 18px; }
-    .cat-title { font-size: 7px; color: var(--text); margin-bottom: 9px; }
-    .chip {
-      display: inline-block;
-      border: 1.5px solid var(--border2);
-      padding: 5px 9px;
-      font-size: 6px;
-      color: var(--text2);
-      background: var(--bg3);
-      margin: 3px;
-      cursor: default;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .chip:hover { border-color: var(--accent2); color: var(--text); }
+  /* ── ATTRIBUTE ROWS ── */
+  .srow { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .sicon { font-size: 14px; width: 22px; }
+  .slbl  { font-size: 6.5px; color: var(--text); width: 120px; flex-shrink: 0; }
+  .sval  { font-size: 6px; color: var(--text2); width: 30px; text-align: right; }
 
-    /* ── CONTACT LINKS ── */
-    .contact-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
-    .clink {
-      display: flex; align-items: center; gap: 12px;
-      border: 2px solid var(--border2);
-      background: var(--bg3);
-      padding: 10px 14px;
-      text-decoration: none;
-      transition: border-color 0.15s;
-    }
-    .clink:hover { border-color: var(--accent2); }
-    .clink-icon { font-size: 16px; width: 24px; }
-    .clink-info { flex: 1; }
-    .clink-name { font-size: 7px; color: var(--text); margin-bottom: 3px; }
-    .clink-val  { font-size: 6px; color: var(--text3); }
-    .clink-arr  { font-size: 8px; color: var(--accent2); }
+  /* ── QUEST CARDS ── */
+  .qcard {
+    border: 2px solid var(--border2);
+    background: var(--bg3);
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+  .qcard:hover { border-color: var(--accent2); }
+  .q-top   { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 7px; }
+  .q-title { font-size: 7.5px; color: var(--text); }
+  .q-desc  { font-size: 6px; color: var(--text2); margin-bottom: 6px; line-height: 1.8; }
+  .q-foot  { display: flex; justify-content: space-between; }
+  .q-diff  { font-size: 6px; color: var(--text3); }
+  .q-rew   { font-size: 6px; color: var(--accent2); }
+  .badge   { font-family: 'Press Start 2P','Courier New',monospace; font-size: 5.5px; padding: 3px 6px; }
+  .ok  { background: #0d2a1a; color: #3dba74; border: 1px solid #1a5a30; }
+  .wip { background: #2a0d2a; color: #c760ff; border: 1px solid #5a1a5a; }
 
-    /* ── LORE / DIALOG ── */
-    .dlg {
-      border: 3px solid var(--border2);
-      background: var(--bg3);
-      padding: 16px;
-      font-size: 7.5px;
-      line-height: 2.3;
-      color: var(--text);
-      min-height: 140px;
-      white-space: pre-wrap;
-    }
-    .lore-foot { margin-top: 8px; text-align: right; font-size: 6px; color: var(--text3); }
+  /* ── SKILLS ── */
+  .skill-cat { margin-bottom: 18px; }
+  .cat-title { font-size: 7px; color: var(--text); margin-bottom: 9px; }
+  .chip {
+    display: inline-block;
+    border: 1.5px solid var(--border2);
+    padding: 5px 9px;
+    font-size: 6px;
+    color: var(--text2);
+    background: var(--bg3);
+    margin: 3px;
+    cursor: default;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .chip:hover { border-color: var(--accent2); color: var(--text); }
 
-    /* ── ACHIEVEMENT ── */
-    @keyframes fadein { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform: translateY(0); } }
-    .ach {
-      border: 2px solid #5a005a;
-      background: #1a001a;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 14px;
-      animation: fadein 0.5s ease;
-    }
-    .ach-title { font-size: 6px; color: var(--accent2); margin-bottom: 4px; }
-    .ach-sub   { font-size: 6px; color: var(--text2); }
+  /* ── CONTACT LINKS ── */
+  .contact-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .clink {
+    display: flex; align-items: center; gap: 12px;
+    border: 2px solid var(--border2);
+    background: var(--bg3);
+    padding: 10px 14px;
+    text-decoration: none;
+    transition: border-color 0.15s;
+  }
+  .clink:hover { border-color: var(--accent2); }
+  .clink-icon { font-size: 16px; width: 24px; }
+  .clink-info { flex: 1; }
+  .clink-name { font-size: 7px; color: var(--text); margin-bottom: 3px; }
+  .clink-val  { font-size: 6px; color: var(--text3); }
+  .clink-arr  { font-size: 8px; color: var(--accent2); }
 
-    /* ── FUN FACT BOX ── */
-    .funfact {
-      border: 2px dashed var(--accent);
-      background: #1a0d2a;
-      padding: 12px;
-      margin-top: 14px;
-      font-size: 6.5px;
-      color: var(--text2);
-      line-height: 2;
-    }
-    .funfact span { color: var(--accent2); }
+  /* ── LORE / DIALOG ── */
+  .dlg {
+    border: 3px solid var(--border2);
+    background: var(--bg3);
+    padding: 16px;
+    font-size: 7.5px;
+    line-height: 2.3;
+    color: var(--text);
+    min-height: 140px;
+    white-space: pre-wrap;
+  }
+  .lore-foot { margin-top: 8px; text-align: right; font-size: 6px; color: var(--text3); }
 
-    /* ── BLINK ── */
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    .bl { animation: blink 1s infinite; }
+  /* ── ACHIEVEMENT ── */
+  @keyframes fadein { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform: translateY(0); } }
+  .ach {
+    border: 2px solid #5a005a;
+    background: #1a001a;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    animation: fadein 0.5s ease;
+  }
+  .ach-title { font-size: 6px; color: var(--accent2); margin-bottom: 4px; }
+  .ach-sub   { font-size: 6px; color: var(--text2); }
 
-    /* ── SCANLINE ── */
-    @keyframes scan { 0%{ top: -10%; } 100%{ top: 110%; } }
-    .scan {
-      position: fixed; top: 0; left: 0; right: 0;
-      height: 3px;
-      background: rgba(160,32,240,0.06);
-      pointer-events: none;
-      animation: scan 4s linear infinite;
-      z-index: 9999;
-    }
+  /* ── FUN FACT BOX ── */
+  .funfact {
+    border: 2px dashed var(--accent);
+    background: #1a0d2a;
+    padding: 12px;
+    margin-top: 14px;
+    font-size: 6.5px;
+    color: var(--text2);
+    line-height: 2;
+  }
+  .funfact span { color: var(--accent2); }
 
-    /* ── STATUS BAR ── */
-    .statusbar {
-      display: flex;
-      justify-content: space-between;
-      padding: 6px 12px;
-      font-size: 5.5px;
-      color: var(--text3);
-      border-top: 2px solid var(--border);
-      background: var(--bg3);
-    }
+  /* ── BLINK ── */
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .bl { animation: blink 1s infinite; }
 
-    /* ── LEVEL BADGE ── */
-    .lvbadge {
-      font-size: 9px;
-      color: var(--text2);
-      margin-left: 10px;
-    }
-    .lvbadge span { color: var(--accent2); }
+  /* ── SCANLINE ── */
+  @keyframes scan { 0%{ top: -10%; } 100%{ top: 110%; } }
+  .scan {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: rgba(160,32,240,0.06);
+    pointer-events: none;
+    animation: scan 4s linear infinite;
+    z-index: 9999;
+  }
 
-    /* scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 0; }
-  </style>
+  /* ── STATUS BAR ── */
+  .statusbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 12px;
+    font-size: 5.5px;
+    color: var(--text3);
+    border-top: 2px solid var(--border);
+    background: var(--bg3);
+  }
+
+  /* ── LEVEL BADGE ── */
+  .lvbadge {
+    font-size: 9px;
+    color: var(--text2);
+    margin-left: 10px;
+  }
+  .lvbadge span { color: var(--accent2); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 0; }
+</style>
 </head>
 <body>
 
+<canvas id="starfield"></canvas>
 <div class="scan"></div>
 
 <div class="container">
-  <div class="frame">
+<div class="frame">
 
-    <!-- HEADER -->
-    <div class="hdr">
-      <span class="hdr-title">🤖 HIMANI.EXE</span>
-      <div style="display:flex;align-items:center;">
-        <div class="mini-bars">
-          <div class="mini-row">
-            <span class="mini-lbl">HP</span>
-            <div class="mini-bg"><div class="bar-fill" style="width:95%;background:#e24b4a;"></div></div>
-            <span class="mini-val">95</span>
-          </div>
-          <div class="mini-row">
-            <span class="mini-lbl">MP</span>
-            <div class="mini-bg"><div class="bar-fill" style="width:88%;background:#a020f0;"></div></div>
-            <span class="mini-val">88</span>
-          </div>
-          <div class="mini-row">
-            <span class="mini-lbl">XP</span>
-            <div class="mini-bg"><div class="bar-fill" style="width:76%;background:#3dba74;"></div></div>
-            <span class="mini-val">76%</span>
-          </div>
+  <!-- HEADER -->
+  <div class="hdr">
+    <span class="hdr-title">🤖 HIMANI.EXE</span>
+    <div style="display:flex;align-items:center;">
+      <div class="mini-bars">
+        <div class="mini-row">
+          <span class="mini-lbl">HP</span>
+          <div class="mini-bg"><div class="bar-fill" style="width:95%;background:#e24b4a;"></div></div>
+          <span class="mini-val">95</span>
         </div>
-        <span class="lvbadge">LV<span>99</span></span>
-      </div>
-    </div>
-
-    <!-- TABS -->
-    <div class="tabs">
-      <button class="tb on" onclick="sw('character',this)">CHARACTER</button>
-      <button class="tb"    onclick="sw('quests',this)">QUESTS</button>
-      <button class="tb"    onclick="sw('skills',this)">SKILLS</button>
-      <button class="tb"    onclick="sw('lore',this)">LORE</button>
-      <button class="tb"    onclick="sw('contact',this)">CONTACT</button>
-    </div>
-
-    <!-- CHARACTER TAB -->
-    <div id="tc" class="tab on">
-      <div class="char-wrap">
-        <div class="avatar">🧠</div>
-        <div class="char-info">
-          <div class="char-name">HIMANI</div>
-          <div class="char-class">CLASS: AGENTIC AI ENGINEER</div>
-          <div class="char-guild">GUILD: MCP EXPLORERS · AUTONOMOUS SYSTEMS</div>
-          <div class="xp-label"><span>NEXT LEVEL</span><span>7,600 / 10,000 EXP</span></div>
-          <div class="bar-bg" style="width:100%;height:12px;">
-            <div class="bar-fill" style="width:76%;background:#a020f0;"></div>
-          </div>
+        <div class="mini-row">
+          <span class="mini-lbl">MP</span>
+          <div class="mini-bg"><div class="bar-fill" style="width:88%;background:#a020f0;"></div></div>
+          <span class="mini-val">88</span>
+        </div>
+        <div class="mini-row">
+          <span class="mini-lbl">XP</span>
+          <div class="mini-bg"><div class="bar-fill" style="width:76%;background:#3dba74;"></div></div>
+          <span class="mini-val">76%</span>
         </div>
       </div>
-
-      <div class="sect">── ATTRIBUTES ──────────────────────────</div>
-      <div id="sc"></div>
-
-      <div class="funfact">
-        ⚡ <span>FUN FACT:</span> I talk to LLMs more than humans on most days 🤝<br>
-        — and honestly, the LLMs are catching up.
-      </div>
-
-      <div id="ach" class="ach">
-        <span style="font-size:22px;">🏆</span>
-        <div>
-          <div class="ach-title">ACHIEVEMENT UNLOCKED!</div>
-          <div class="ach-sub">PORTFOLIO VIEWED  +100 XP  +AGENTIC AURA BUFF</div>
-        </div>
-      </div>
+      <span class="lvbadge">LV<span>99</span></span>
     </div>
-
-    <!-- QUESTS TAB -->
-    <div id="tq" class="tab">
-      <div class="sect">── QUEST LOG ──────────── ACTIVE MISSIONS</div>
-      <div id="qc"></div>
-    </div>
-
-    <!-- SKILLS TAB -->
-    <div id="ts" class="tab">
-      <div class="sect">── SPELL BOOK ──────────────────────────</div>
-      <div id="skillc"></div>
-    </div>
-
-    <!-- LORE TAB -->
-    <div id="tl" class="tab">
-      <div class="sect">── CHARACTER LORE ───────────────────────</div>
-      <div class="dlg"><span id="lt"></span><span class="bl" id="lc">█</span></div>
-      <div class="lore-foot">▼ PRESS ANY KEY TO CONTINUE</div>
-    </div>
-
-    <!-- CONTACT TAB -->
-    <div id="tco" class="tab">
-      <div class="sect">── SEND MESSAGE ─────────────────────────</div>
-      <div class="contact-grid" id="cc"></div>
-    </div>
-
-  </div><!-- /frame -->
-
-  <div class="statusbar">
-    <span>LOCATION: AGENTIC AI DUNGEON — MCP FLOOR</span>
-    <span>STATUS: BUILDING AGENTS <span class="bl">█</span></span>
   </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tb on" onclick="sw('character',this)">CHARACTER</button>
+    <button class="tb"    onclick="sw('quests',this)">QUESTS</button>
+    <button class="tb"    onclick="sw('skills',this)">SKILLS</button>
+    <button class="tb"    onclick="sw('lore',this)">LORE</button>
+    <button class="tb"    onclick="sw('contact',this)">CONTACT</button>
+  </div>
+
+  <!-- CHARACTER TAB -->
+  <div id="tc" class="tab on">
+    <div class="char-wrap">
+      <div class="avatar">🧠</div>
+      <div class="char-info">
+        <div class="char-name">HIMANI</div>
+        <div class="char-class">CLASS: AGENTIC AI ENGINEER</div>
+        <div class="char-guild">GUILD: MCP EXPLORERS · AUTONOMOUS SYSTEMS</div>
+        <div class="xp-label"><span>NEXT LEVEL</span><span>7,600 / 10,000 EXP</span></div>
+        <div class="bar-bg" style="width:100%;height:12px;">
+          <div class="bar-fill" style="width:76%;background:#a020f0;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sect">── ATTRIBUTES ──────────────────────────</div>
+    <div id="sc"></div>
+
+    <div class="funfact">
+      ⚡ <span>FUN FACT:</span> I talk to LLMs more than humans on most days 🤝<br>
+      — and honestly, the LLMs are catching up.
+    </div>
+
+    <div id="ach" class="ach">
+      <span style="font-size:22px;">🏆</span>
+      <div>
+        <div class="ach-title">ACHIEVEMENT UNLOCKED!</div>
+        <div class="ach-sub">PORTFOLIO VIEWED  +100 XP  +AGENTIC AURA BUFF</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTS TAB -->
+  <div id="tq" class="tab">
+    <div class="sect">── QUEST LOG ──────────── ACTIVE MISSIONS</div>
+    <div id="qc"></div>
+  </div>
+
+  <!-- SKILLS TAB -->
+  <div id="ts" class="tab">
+    <div class="sect">── SPELL BOOK ──────────────────────────</div>
+    <div id="skillc"></div>
+  </div>
+
+  <!-- LORE TAB -->
+  <div id="tl" class="tab">
+    <div class="sect">── CHARACTER LORE ───────────────────────</div>
+    <div class="dlg"><span id="lt"></span><span class="bl" id="lc">█</span></div>
+    <div class="lore-foot">▼ PRESS ANY KEY TO CONTINUE</div>
+  </div>
+
+  <!-- CONTACT TAB -->
+  <div id="tco" class="tab">
+    <div class="sect">── SEND MESSAGE ─────────────────────────</div>
+    <div class="contact-grid" id="cc"></div>
+  </div>
+
+</div><!-- /frame -->
+
+<div class="statusbar">
+  <span>LOCATION: AGENTIC AI DUNGEON — MCP FLOOR</span>
+  <span>STATUS: BUILDING AGENTS <span class="bl">█</span></span>
+</div>
 
 </div><!-- /container -->
 
 <script>
-  const stats = [
-    { n:'Python',          v:92, c:'#3dba74', i:'🐍' },
-    { n:'Agentic AI',      v:88, c:'#a020f0', i:'🤖' },
-    { n:'MCP Protocol',    v:65, c:'#c760ff', i:'🔌' },
-    { n:'React / Next.js', v:78, c:'#378add', i:'⚛'  },
-    { n:'Node.js',         v:80, c:'#1d9e75', i:'🟢' },
-    { n:'Docker / K8s',    v:75, c:'#2496ed', i:'🐳' },
-    { n:'TypeScript',      v:70, c:'#185fa5', i:'📘' },
-    { n:'AWS / Cloud',     v:72, c:'#ef9f27', i:'☁️' },
-  ];
+const stats = [
+  { n:'Python',          v:92, c:'#3dba74', i:'🐍' },
+  { n:'Agentic AI',      v:88, c:'#a020f0', i:'🤖' },
+  { n:'MCP Protocol',    v:65, c:'#c760ff', i:'🔌' },
+  { n:'React / Next.js', v:78, c:'#378add', i:'⚛'  },
+  { n:'Node.js',         v:80, c:'#1d9e75', i:'🟢' },
+  { n:'Docker / K8s',    v:75, c:'#2496ed', i:'🐳' },
+  { n:'TypeScript',      v:70, c:'#185fa5', i:'📘' },
+  { n:'AWS / Cloud',     v:72, c:'#ef9f27', i:'☁️' },
+];
 
-  const quests = [
-    {
-      t:'AGENTIC AI SYSTEM',
-      s:'IN PROGRESS',
-      d:'★★★★★',
-      r:'+Python +LangChain +MCP',
-      desc:'Designing agents that think, plan, and act autonomously end-to-end.'
-    },
-    {
-      t:'MCP INTEGRATION',
-      s:'IN PROGRESS',
-      d:'★★★★☆',
-      r:'+MCP +Tool Use +APIs',
-      desc:'Connecting AI models to real-world tools and live data via Model Context Protocol.'
-    },
-    {
-      t:'FULL STACK WEB APP',
-      s:'COMPLETED',
-      d:'★★★★☆',
-      r:'+React +Node.js +Postgres',
-      desc:'Production-grade web application with REST APIs and responsive UI.'
-    },
-    {
-      t: 'Pentest Agent',
-      s: 'COMPLETED',
-      d: '★★★★☆',
-      r: '+Python +LangChain +MCP ',
-      desc: 'Full Automated Pentest Agent.'
-    }
+const quests = [
+  {
+    t:'AGENTIC AI SYSTEM',
+    s:'IN PROGRESS',
+    d:'★★★★★',
+    r:'+Python +LangChain +MCP',
+    desc:'Designing agents that think, plan, and act autonomously end-to-end.'
+  },
+  {
+    t:'MCP INTEGRATION',
+    s:'IN PROGRESS',
+    d:'★★★★☆',
+    r:'+MCP +Tool Use +APIs',
+    desc:'Connecting AI models to real-world tools and live data via Model Context Protocol.'
+  },
+  {
+    t:'FULL STACK WEB APP',
+    s:'COMPLETED',
+    d:'★★★★☆',
+    r:'+React +Node.js +MongoDB',
+    desc:'Production-grade web application with REST APIs and responsive UI.'
+  },
+  {
+    t:'ML PIPELINE',
+    s:'COMPLETED',
+    d:'★★★☆☆',
+    r:'+Python +Scikit-learn +Pandas',
+    desc:'End-to-end machine learning pipeline with data preprocessing and model evaluation.'
+  },
+  {
+    t:'DEVOPS SETUP',
+    s:'COMPLETED',
+    d:'★★★★☆',
+    r:'+Docker +K8s +Jenkins',
+    desc:'Containerised microservices with CI/CD pipeline and Kubernetes orchestration.'
+  },
+];
 
-  ];
+const skills = [
+  {
+    cat:'AI & Agentic Systems',
+    i:'🤖',
+    chips:['Agentic AI','MCP','LangChain','OpenAI API','Autonomous Agents','RAG','LLMs','OpenCV','Scikit-learn','Pandas']
+  },
+  {
+    cat:'Frontend Spells',
+    i:'🖥',
+    chips:['React','Next.js','Vue.js','React Native','HTML5','CSS3','Tailwind','TypeScript','JavaScript','Figma']
+  },
+  {
+    cat:'Backend Sorcery',
+    i:'⚙️',
+    chips:['Node.js','Express','Flask','Python','Java','REST APIs','PostgreSQL','MongoDB','MySQL','SQLite']
+  },
+  {
+    cat:'DevOps Enchantments',
+    i:'🚀',
+    chips:['Docker','Kubernetes','AWS','Jenkins','Nginx','Git','Bash','Linux','Postman','Arduino']
+  },
+];
 
-  const skills = [
-    {
-      cat:'AI & Agentic Systems',
-      i:'🤖',
-      chips:['Agentic AI','MCP','LangChain','OpenAI API','Autonomous Agents','RAG','LLMs','OpenCV','Scikit-learn','Pandas']
-    },
-    {
-      cat:'Frontend Spells',
-      i:'🖥',
-      chips:['React','Next.js','Vue.js','React Native','HTML5','CSS3','Tailwind','TypeScript','JavaScript','Figma']
-    },
-    {
-      cat:'Backend Sorcery',
-      i:'⚙️',
-      chips:['Node.js','Express','Flask','Python','Java','REST APIs','PostgreSQL','MongoDB','MySQL','SQLite']
-    },
-    {
-      cat:'DevOps Enchantments',
-      i:'🚀',
-      chips:['Docker','Kubernetes','AWS','Jenkins','Nginx','Git','Bash','Linux','Postman','Arduino']
-    },
-  ];
+const lore = `Once upon a compile time, a young engineer named Himani discovered something extraordinary — AI that didn't just answer questions, but actually DID things.\n\nArmed with Python and an unquenchable curiosity, she ventured deep into the realm of Agentic AI — where models don't just chat, they plan, decide, and execute.\n\nNow she wanders the frontier, wielding MCP (Model Context Protocol) like a legendary artifact — connecting AI agents to real-world tools, APIs, and data sources that others only dream of.\n\nHer fun fact? She talks to LLMs more than humans most days. And honestly... the LLMs are catching up.\n\nHer mission: Build AI that works while she sleeps. 🤖💤\n\n[ CURRENTLY ACCEPTING QUESTS & COLLABORATIONS ]`;
 
-  const lore = `Once upon a compile time, a young engineer named Himani discovered something extraordinary — AI that didn't just answer questions, but actually DID things.\n\nArmed with Python and an unquenchable curiosity, she ventured deep into the realm of Agentic AI — where models don't just chat, they plan, decide, and execute.\n\nNow she wanders the frontier, wielding MCP (Model Context Protocol) like a legendary artifact — connecting AI agents to real-world tools, APIs, and data sources that others only dream of.\n\nHer fun fact? She talks to LLMs more than humans most days. And honestly... the LLMs are catching up.\n\nHer mission: Build AI that works while she sleeps. 🤖💤\n\n[ CURRENTLY ACCEPTING QUESTS & COLLABORATIONS ]`;
+const contacts = [
+  { icon:'📧', name:'EMAIL', val:'bhaisorahimani2@gmail.com', href:'mailto:bhaisorahimani2@gmail.com' },
+  { icon:'💼', name:'LINKEDIN', val:'himani-bhaisora-607456208', href:'https://linkedin.com/in/himani-bhaisora-607456208' },
+  { icon:'📊', name:'KAGGLE', val:'himanibhaisora', href:'https://kaggle.com/himanibhaisora' },
+  { icon:'💻', name:'LEETCODE', val:'himanibhaisora', href:'https://www.leetcode.com/himanibhaisora' },
+  { icon:'🏅', name:'HACKERRANK', val:'bhaisorahimani2', href:'https://www.hackerrank.com/profile/bhaisorahimani2' },
+];
 
-  const contacts = [
-    { icon:'📧', name:'EMAIL', val:'bhaisorahimani2@gmail.com', href:'mailto:bhaisorahimani2@gmail.com' },
-    { icon:'💼', name:'LINKEDIN', val:'himani-bhaisora-607456208', href:'https://linkedin.com/in/himani-bhaisora-607456208' },
-    { icon:'📊', name:'KAGGLE', val:'himanibhaisora', href:'https://kaggle.com/himanibhaisora' },
-    { icon:'💻', name:'LEETCODE', val:'himanibhaisora', href:'https://www.leetcode.com/himanibhaisora' },
-    { icon:'🏅', name:'HACKERRANK', val:'bhaisorahimani2', href:'https://www.hackerrank.com/profile/bhaisorahimani2' },
-  ];
-
-  // Render attribute bars
-  document.getElementById('sc').innerHTML = stats.map(s => `
+// Render attribute bars
+document.getElementById('sc').innerHTML = stats.map(s => `
   <div class="srow">
     <span class="sicon">${s.i}</span>
     <span class="slbl">${s.n}</span>
@@ -462,8 +487,8 @@
   </div>
 `).join('');
 
-  // Render quests
-  document.getElementById('qc').innerHTML = quests.map(q => `
+// Render quests
+document.getElementById('qc').innerHTML = quests.map(q => `
   <div class="qcard">
     <div class="q-top">
       <span class="q-title">${q.t}</span>
@@ -477,16 +502,16 @@
   </div>
 `).join('');
 
-  // Render skills
-  document.getElementById('skillc').innerHTML = skills.map(s => `
+// Render skills
+document.getElementById('skillc').innerHTML = skills.map(s => `
   <div class="skill-cat">
     <div class="cat-title">${s.i} ${s.cat}</div>
     <div>${s.chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>
   </div>
 `).join('');
 
-  // Render contacts
-  document.getElementById('cc').innerHTML = contacts.map(c => `
+// Render contacts
+document.getElementById('cc').innerHTML = contacts.map(c => `
   <a class="clink" href="${c.href}" target="_blank" rel="noreferrer">
     <span class="clink-icon">${c.icon}</span>
     <div class="clink-info">
@@ -497,53 +522,172 @@
   </a>
 `).join('');
 
-  // Typewriter for lore
-  let typed = false;
-  function typeIt() {
-    if (typed) return; typed = true;
-    const el = document.getElementById('lt');
-    const cur = document.getElementById('lc');
-    let i = 0;
-    const iv = setInterval(() => {
-      if (i < lore.length) {
-        el.textContent += lore[i]; i++;
-      } else {
-        clearInterval(iv);
-        cur.style.display = 'none';
-      }
-    }, 24);
-  }
+// Typewriter for lore
+let typed = false;
+function typeIt() {
+  if (typed) return; typed = true;
+  const el = document.getElementById('lt');
+  const cur = document.getElementById('lc');
+  let i = 0;
+  const iv = setInterval(() => {
+    if (i < lore.length) {
+      el.textContent += lore[i]; i++;
+    } else {
+      clearInterval(iv);
+      cur.style.display = 'none';
+    }
+  }, 24);
+}
 
-  // Retro beep
-  function beep(freq) {
-    try {
-      const ac = new (window.AudioContext || window.webkitAudioContext)();
-      const o = ac.createOscillator(), g = ac.createGain();
-      o.connect(g); g.connect(ac.destination);
-      o.type = 'square'; o.frequency.value = freq;
-      g.gain.setValueAtTime(0.04, ac.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.12);
-      o.start(); o.stop(ac.currentTime + 0.12);
-    } catch(e) {}
-  }
+// Retro beep
+function beep(freq) {
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.connect(g); g.connect(ac.destination);
+    o.type = 'square'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.04, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.12);
+    o.start(); o.stop(ac.currentTime + 0.12);
+  } catch(e) {}
+}
 
-  // Tab switch
-  function sw(id, btn) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-    document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
-    const tabMap = { character:'tc', quests:'tq', skills:'ts', lore:'tl', contact:'tco' };
-    document.getElementById(tabMap[id]).classList.add('on');
-    btn.classList.add('on');
-    if (id === 'lore') typeIt();
-    const freq = { character:523, quests:440, skills:587, lore:349, contact:659 };
-    beep(freq[id]);
-  }
+// Tab switch
+function sw(id, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  const tabMap = { character:'tc', quests:'tq', skills:'ts', lore:'tl', contact:'tco' };
+  document.getElementById(tabMap[id]).classList.add('on');
+  btn.classList.add('on');
+  if (id === 'lore') typeIt();
+  const freq = { character:523, quests:440, skills:587, lore:349, contact:659 };
+  beep(freq[id]);
+}
 
-  // Achievement auto-hide
-  setTimeout(() => {
-    const a = document.getElementById('ach');
-    if (a) { a.style.transition = 'opacity 1s'; a.style.opacity = '0'; setTimeout(() => a.remove(), 1000); }
-  }, 4000);
+// ── STARFIELD ──
+(function() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const STAR_COUNT = 180;
+  const SHOOT_INTERVAL = 3200;
+
+  const stars = Array.from({ length: STAR_COUNT }, () => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: Math.random() * 1.5 + 0.3,
+    alpha: Math.random(),
+    speed: Math.random() * 0.4 + 0.05,
+    twinkleSpeed: Math.random() * 0.02 + 0.005,
+    twinkleDir: Math.random() > 0.5 ? 1 : -1,
+    // subtle colour: white, light blue, light purple
+    hue: [0, 220, 270][Math.floor(Math.random() * 3)],
+  }));
+
+  // nebula blobs (static, drawn once)
+  const nebulae = [
+    { x: 0.15, y: 0.25, r: 220, c: 'rgba(100,20,180,0.07)' },
+    { x: 0.80, y: 0.60, r: 180, c: 'rgba(30,60,160,0.06)' },
+    { x: 0.50, y: 0.85, r: 150, c: 'rgba(80,10,140,0.05)' },
+  ];
+
+  // shooting stars pool
+  let shooters = [];
+  function spawnShooter() {
+    const angle = Math.PI / 6 + (Math.random() - 0.5) * 0.4;
+    shooters.push({
+      x: Math.random() * canvas.width * 0.7,
+      y: Math.random() * canvas.height * 0.4,
+      len: 90 + Math.random() * 80,
+      speed: 12 + Math.random() * 8,
+      alpha: 1,
+      angle,
+      life: 1,
+    });
+  }
+  setInterval(spawnShooter, SHOOT_INTERVAL);
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // nebulae
+    nebulae.forEach(n => {
+      const grd = ctx.createRadialGradient(
+        n.x * canvas.width, n.y * canvas.height, 0,
+        n.x * canvas.width, n.y * canvas.height, n.r
+      );
+      grd.addColorStop(0, n.c);
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(n.x * canvas.width, n.y * canvas.height, n.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // regular stars
+    stars.forEach(s => {
+      s.alpha += s.twinkleSpeed * s.twinkleDir;
+      if (s.alpha >= 1)   { s.alpha = 1;   s.twinkleDir = -1; }
+      if (s.alpha <= 0.1) { s.alpha = 0.1; s.twinkleDir =  1; }
+      s.y += s.speed * 0.08; // very slow drift
+      if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width; }
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = s.hue === 0
+        ? `rgba(255,255,255,${s.alpha})`
+        : s.hue === 220
+          ? `rgba(160,180,255,${s.alpha})`
+          : `rgba(200,130,255,${s.alpha})`;
+      ctx.fill();
+    });
+
+    // shooting stars
+    shooters = shooters.filter(sh => sh.life > 0);
+    shooters.forEach(sh => {
+      sh.x += Math.cos(sh.angle) * sh.speed;
+      sh.y += Math.sin(sh.angle) * sh.speed;
+      sh.life -= 0.025;
+      sh.alpha = sh.life;
+
+      const tail = {
+        x: sh.x - Math.cos(sh.angle) * sh.len,
+        y: sh.y - Math.sin(sh.angle) * sh.len,
+      };
+      const grd = ctx.createLinearGradient(tail.x, tail.y, sh.x, sh.y);
+      grd.addColorStop(0, 'transparent');
+      grd.addColorStop(1, `rgba(220,180,255,${sh.alpha})`);
+      ctx.beginPath();
+      ctx.moveTo(tail.x, tail.y);
+      ctx.lineTo(sh.x, sh.y);
+      ctx.strokeStyle = grd;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // bright tip
+      ctx.beginPath();
+      ctx.arc(sh.x, sh.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${sh.alpha})`;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// Achievement auto-hide
+setTimeout(() => {
+  const a = document.getElementById('ach');
+  if (a) { a.style.transition = 'opacity 1s'; a.style.opacity = '0'; setTimeout(() => a.remove(), 1000); }
+}, 4000);
 </script>
 </body>
 </html>
