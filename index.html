@@ -371,7 +371,7 @@
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;
         }
 
-        .project-card {
+        /* .project-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 4px;
@@ -393,7 +393,51 @@
         }
 
         .project-card:hover { border-color: rgba(0,255,140,0.3); transform: translateY(-2px); }
-        .project-card:hover::before { transform: scaleX(1); }
+        .project-card:hover::before { transform: scaleX(1); } */
+
+        .project-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1.75rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.2s;
+            cursor: default;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(8, 11, 15, 0.88);
+            z-index: 0;
+            transition: background 0.3s;
+        }
+
+        .project-card:hover::before {
+            background: rgba(8, 11, 15, 0.75);
+        }
+
+        .project-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .project-card::after {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--green);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+            z-index: 2;
+        }
+
+        .project-card:hover::after {
+            transform: scaleX(1);
+        }
 
         .project-number {
             font-family: 'JetBrains Mono', monospace;
@@ -875,7 +919,8 @@
     <h2>Featured <em>Work</em></h2>
     <div class="projects-grid">
 
-        <div class="project-card">
+        <!-- <div class="project-card"> -->
+        <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=60')">
             <div class="project-number">01 / FEATURED</div>
             <div class="project-name">Multi-Agent Penetration Testing System</div>
             <div class="project-desc">
@@ -896,7 +941,9 @@
 <!--            </div>-->
         </div>
 
-        <div class="project-card">
+        <!-- <div class="project-card"> -->
+        <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=60')">
+
             <div class="project-number">02</div>
             <div class="project-name">Vendor Security Platform</div>
             <div class="project-desc">
@@ -915,7 +962,9 @@
 <!--            </div>-->
         </div>
 
-        <div class="project-card">
+        <!-- <div class="project-card"> -->
+        <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=60')">
+
             <div class="project-number">03</div>
             <div class="project-name">Flask Vulnerability Scanner Suite</div>
             <div class="project-desc">
@@ -935,7 +984,9 @@
 <!--            </div>-->
         </div>
 
-        <div class="project-card">
+        <!-- <div class="project-card"> -->
+        <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=60')">
+
             <div class="project-number">04 / CURRENT</div>
             <div class="project-name">LMS — Employee & Training Management</div>
             <div class="project-desc">
@@ -957,7 +1008,9 @@
 <!--            </div>-->
         </div>
         
-        <div class="project-card">
+        <!-- <div class="project-card"> -->
+        <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&q=60')">
+
             <div class="project-number">05</div>
             <div class="project-name">Trust Center — Backend</div>
             <div class="project-desc">
